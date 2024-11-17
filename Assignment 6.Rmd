@@ -1,0 +1,86 @@
+---
+title: "Assignment 6"
+author: "Ritik Kumar"
+date: "2024-11-16"
+output: html_document
+---
+---
+title: "Assignment_6"
+author: "Ritik Kumar"
+date: "2024-11-16"
+output: html_document
+---
+
+## Importing the dataset
+```{r}
+library(forecast)
+library(ggplot2)
+library(readxl)
+library(UsingR)
+
+#Import the dataset
+data<- read_excel("C:/Users/malho/Downloads/TotalQuestions_Stack_Overflow.xlsx")
+print(head(data))
+```
+
+## 1. Find an independent variable to predict your time-series (2 points)
+* Dependent Variable: Let’s predict the number of questions related to Python.So,we are taking Python as the dependent variable.
+* Independent Variables: Other languages or technologies like Java, JavaScript, and C++ might influence Python-related questions.Therefore, we are taking Java as independent variable to predict python related questions.
+* The connection between Java with Python questions is not always direct but may reflect:
+* Shifts in developer preferences.
+* Complementary or competitive usage patterns.
+* Shared communities or problem domains.
+
+## 2. Perform regression (2 Points)
+```{r}
+## Create a Scatter Plot
+plot(data$Java, data$Python,pch=19,col="blue")
+
+## Conduct a linear Model Regression
+lm1 <- lm(data$Python ~ data$Java)
+
+## Add Regression Line to the scatter plot
+lines(data$Java, lm1$fitted, col="black",lwd=3)
+
+## Visualize
+smoothScatter(data$Java,data$Python)
+abline(lm1,col="red",lwd=3)
+```
+
+## 3. Perform Model Acceptance Steps and show the interpretation of the model output (3 Points)
+```{r}
+summary(lm1)
+```
+
+## Interpretation
+* Model acceptance checks whether your regression model is statistically valid and interprets its results.
+* p-value < 2.2e-16(a very small value close to zero) of java means the result is statistically significant, and the variable or model has a meaningful relationship with the dependent variable such as Python.
+* The triple asterisks (***) in summary indicate that the p-value is below the default significance threshold of α =0.001, meaning the result is highly significant.
+* Yes, data$Java is statistically significant, as the p-value (< 2e-16) is much smaller than α=0.05. This suggests that Java has a strong, meaningful relationship with the dependent variable Python in the regression model.
+
+## 4. Perform Residual Analysis and explain the insights (3 Points)
+```{r}
+# Residual Analysis 
+# 1. Plot gives multiple graphs for regression analysis 
+plot(lm1)
+
+# 2. Histogram of residuals
+hist(residuals(lm1), main="Histogram of Residuals", xlab="Residuals", col="yellow")
+
+# 3. Residuals vs Fitted plot to check homoscedasticity
+plot(lm1$fitted.values, residuals(lm1), main="Residuals vs Fitted", 
+     xlab="Fitted Values", ylab="Residuals", pch=19, col="blue")
+abline(h=0, col="red", lwd=2)
+```
+
+## Insights
+* The command plot(lm1) generates several diagnostic plots that help assess the validity of the linear regression model (lm1).
+* Histogram provides a visual representation of the distribution of residuals.So,it suggests residuals are not normally distributed.
+* Residuals vs Fitted plot shows a pattern with increasing variance (fan shape), indicating heteroscedasticity, which violates the assumption of constant variance in linear regression. This suggests the need for transformations (e.g., log or square root) or alternative modeling techniques to address the issue. 
+* The straight red line in the Residuals vs Fitted plot represents the zero residual line. It indicates where residuals would lie if the model's predictions were perfect (i.e., no difference between observed and predicted values).
+* Also, It acts as a reference line to assess how the residuals are distributed around zero.
+
+## Conclusion
+* We predicted the number of Python-related questions using Java as independent variables.
+* Regression results provide insights into that Java variable significantly impact Python questions.
+* Residual analysis ensures the validity of the model.
